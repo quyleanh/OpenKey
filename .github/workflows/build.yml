@@ -1,10 +1,12 @@
-name: Build OpenKey Windows
+name: Build OpenKey
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       configuration:
@@ -26,52 +28,22 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022  # Changed to windows-2022 for VS2022
+    runs-on: windows-latest
     
-    env:
-      SOLUTION_FILE: Sources/OpenKey/win32/OpenKey/OpenKey.sln
-      CONFIGURATION: ${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}
-      PLATFORM: ${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}
-
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-      with:
-        vs-version: '17.0'  # Changed to VS2022
-        
-    - name: Setup VS Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1
-      with:
-        arch: ${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}
-        toolset: '143'  # Changed to VS2022 toolset
-        
-    - name: Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.sln') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-          
-    - name: Restore NuGet packages
-      run: nuget restore ${{ env.SOLUTION_FILE }}
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1
       
     - name: Build Solution
       run: |
-        msbuild /m /p:Configuration=${{ env.CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /p:PlatformToolset=v143 ${{ env.SOLUTION_FILE }}
+        MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=Release /p:Platform=x64
         
-    - name: Create Artifact Directory
-      run: mkdir artifacts
-      
-    - name: Copy Build Output
-      run: |
-        copy "Sources\OpenKey\win32\${{ env.CONFIGURATION }}\OpenKey.exe" artifacts\
-        copy "Sources\OpenKey\win32\${{ env.CONFIGURATION }}\*.dll" artifacts\
-        
-    - name: Upload Build Artifacts
+    - name: Archive Build Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: OpenKey-Windows-${{ env.CONFIGURATION }}-${{ env.PLATFORM }}
-        path: artifacts\
+        name: OpenKey-Build
+        path: Sources/OpenKey/win32/x64/Release/
+
