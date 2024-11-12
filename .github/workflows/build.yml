@@ -1,4 +1,4 @@
-name: Build OpenKey
+name: Build OpenKey Windows
 
 on:
   push:
@@ -26,7 +26,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019  # This runner has VS2017 installed
+    runs-on: windows-2022  # Changed to windows-2022 for VS2022
     
     env:
       SOLUTION_FILE: Sources/OpenKey/win32/OpenKey/OpenKey.sln
@@ -39,13 +39,13 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.1
       with:
-        vs-version: '15.0'  # VS2017
+        vs-version: '17.0'  # Changed to VS2022
         
     - name: Setup VS Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1
       with:
         arch: ${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}
-        toolset: '14.16'  # VS2017
+        toolset: '143'  # Changed to VS2022 toolset
         
     - name: Cache NuGet packages
       uses: actions/cache@v3
@@ -60,7 +60,7 @@ jobs:
       
     - name: Build Solution
       run: |
-        msbuild /m /p:Configuration=${{ env.CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} ${{ env.SOLUTION_FILE }}
+        msbuild /m /p:Configuration=${{ env.CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} /p:PlatformToolset=v143 ${{ env.SOLUTION_FILE }}
         
     - name: Create Artifact Directory
       run: mkdir artifacts
