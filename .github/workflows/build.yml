@@ -29,7 +29,7 @@ jobs:
     runs-on: windows-2019  # This runner has VS2017 installed
     
     env:
-      SOLUTION_FILE: Sources/OpenKey/win32/OpenKey.sln
+      SOLUTION_FILE: Sources/OpenKey/win32/OpenKey/OpenKey.sln
       CONFIGURATION: ${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}
       PLATFORM: ${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}
 
