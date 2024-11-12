@@ -1,0 +1,27 @@
+name: Build OpenKey
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1
+      
+    - name: Build Solution
+      run: |
+        MSBuild.exe "Sources/OpenKey/win32/OpenKey.sln" /p:Configuration=Release /p:Platform=x64
+        
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: OpenKey-Build
+        path: Sources/OpenKey/win32/x64/Release/
