@@ -2,32 +2,76 @@ name: Build OpenKey
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build Configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      platform:
+        description: 'Build Platform'
+        required: true
+        default: 'x86'
+        type: choice
+        options:
+          - x86
+          - x64
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2019  # This runner has VS2017 installed
     
+    env:
+      SOLUTION_FILE: Sources/OpenKey/win32/OpenKey.sln
+      CONFIGURATION: ${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}
+      PLATFORM: ${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      
-    - name: Set up MSBuild
-      uses: microsoft/setup-msbuild@v1
-      
-    - name: Install dependencies
-      run: |
-        choco install visualstudio2017buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional"
-        choco install visualstudio2017-workload-vctools
+    - uses: actions/checkout@v4
+    
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-version: '15.0'  # VS2017
+        
+    - name: Setup VS Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}
+        toolset: '14.16'  # VS2017
+        
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.sln') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+          
+    - name: Restore NuGet packages
+      run: nuget restore ${{ env.SOLUTION_FILE }}
       
     - name: Build Solution
       run: |
-        MSBuild.exe "Sources/OpenKey/win32/OpenKey.sln" /p:Configuration=Release /p:Platform=x64
+        msbuild /m /p:Configuration=${{ env.CONFIGURATION }} /p:Platform=${{ env.PLATFORM }} ${{ env.SOLUTION_FILE }}
         
-    - name: Archive Build Artifacts
+    - name: Create Artifact Directory
+      run: mkdir artifacts
+      
+    - name: Copy Build Output
+      run: |
+        copy "Sources\OpenKey\win32\${{ env.CONFIGURATION }}\OpenKey.exe" artifacts\
+        copy "Sources\OpenKey\win32\${{ env.CONFIGURATION }}\*.dll" artifacts\
+        
+    - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: OpenKey-Build
-        path: Sources/OpenKey/win32/x64/Release/
+        name: OpenKey-Windows-${{ env.CONFIGURATION }}-${{ env.PLATFORM }}
+        path: artifacts\
