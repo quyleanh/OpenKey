@@ -45,5 +45,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: OpenKey-Build
-        path: Sources/OpenKey/win32/x64/Release/
+        path: Sources/OpenKey/win32/OpenKey/x64/Release/
 
