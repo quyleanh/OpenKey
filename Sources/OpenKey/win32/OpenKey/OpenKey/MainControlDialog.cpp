@@ -20,7 +20,7 @@ redistribute your new version, it MUST be open source.
 
 static Uint16 _lastKeyCode;
 
-MainControlDialog::MainControlDialog(const HINSTANCE & hInstance, const int & resourceId) 
+MainControlDialog::MainControlDialog(const HINSTANCE& hInstance, const int& resourceId)
 	: BaseDialog(hInstance, resourceId) {
 }
 
@@ -82,7 +82,7 @@ void MainControlDialog::initDialog() {
 	ScreenToClient(hDlg, &offset);
 	OffsetRect(&rc, offset.x, offset.y); //convert to client coordinates
 	rc.top += (LONG)((r.bottom - r.top) * 1.428f);
-	SetWindowPos(hTabPage1, 0, rc.left+1, rc.top+3, rc.right - rc.left - 5, rc.bottom - rc.top - 5, SWP_HIDEWINDOW);
+	SetWindowPos(hTabPage1, 0, rc.left + 1, rc.top + 3, rc.right - rc.left - 5, rc.bottom - rc.top - 5, SWP_HIDEWINDOW);
 	SetWindowPos(hTabPage2, 0, rc.left + 1, rc.top + 3, rc.right - rc.left - 5, rc.bottom - rc.top - 6, SWP_HIDEWINDOW);
 	SetWindowPos(hTabPage3, 0, rc.left + 1, rc.top + 3, rc.right - rc.left - 5, rc.bottom - rc.top - 6, SWP_HIDEWINDOW);
 	SetWindowPos(hTabPage4, 0, rc.left + 1, rc.top + 3, rc.right - rc.left - 5, rc.bottom - rc.top - 6, SWP_HIDEWINDOW);
@@ -94,10 +94,10 @@ void MainControlDialog::initDialog() {
 	checkAlt = GetDlgItem(hDlg, IDC_CHECK_SWITCH_KEY_ALT);
 	createToolTip(checkAlt, IDS_STRING_ALT);
 
-	checkWin = GetDlgItem(hDlg, IDC_CHECK_SWITCH_KEY_WIN); 
+	checkWin = GetDlgItem(hDlg, IDC_CHECK_SWITCH_KEY_WIN);
 	createToolTip(checkWin, IDS_STRING_WIN);
 
-	checkShift = GetDlgItem(hDlg, IDC_CHECK_SWITCH_KEY_SHIFT); 
+	checkShift = GetDlgItem(hDlg, IDC_CHECK_SWITCH_KEY_SHIFT);
 	createToolTip(checkShift, IDS_STRING_SHIFT);
 
 	textSwitchKey = GetDlgItem(hDlg, IDC_SWITCH_KEY_KEY);
@@ -106,7 +106,7 @@ void MainControlDialog::initDialog() {
 	checkBeep = GetDlgItem(hDlg, IDC_CHECK_SWITCH_KEY_BEEP);
 	createToolTip(checkBeep, IDS_STRING_BEEP);
 
-	checkVietnamese = GetDlgItem(hDlg, IDC_RADIO_METHOD_VIETNAMESE); 
+	checkVietnamese = GetDlgItem(hDlg, IDC_RADIO_METHOD_VIETNAMESE);
 	createToolTip(checkVietnamese, IDS_STRING_VIET);
 
 	checkEnglish = GetDlgItem(hDlg, IDC_RADIO_METHOD_ENGLISH);
@@ -144,6 +144,7 @@ void MainControlDialog::initDialog() {
 	checkTempOffOpenKey = GetDlgItem(hTabPage1, IDC_CHECK_TEMP_OFF_OPEN_KEY);
 	createToolTip(checkTempOffOpenKey, IDS_STRING_TEMP_OFF_OPENKEY);
 
+	checkVietnameseOffByEsc = GetDlgItem(hTabPage1, IDC_CHECK_VIETNAMESE_OFF_BY_ESC);
 	/*------------end tab 1----------------*/
 
 	checkQuickStartConsonant = GetDlgItem(hTabPage2, IDC_CHECK_QUICK_START_CONSONANT);
@@ -289,20 +290,23 @@ INT_PTR MainControlDialog::tabPageEventProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 		SetWindowLong(hDlg, GWL_USERDATA, lParam);
 #endif
 		return TRUE;
-	} else if (uMsg == WM_ERASEBKGND) {
+	}
+	else if (uMsg == WM_ERASEBKGND) {
 		return TRUE;
-	} else if ((uMsg == WM_CTLCOLORSTATIC || uMsg == WM_CTLCOLORBTN) && IsThemeActive()) {
+	}
+	else if ((uMsg == WM_CTLCOLORSTATIC || uMsg == WM_CTLCOLORBTN) && IsThemeActive()) {
 		SetBkMode((HDC)wParam, TRANSPARENT);
 		return (LRESULT)GetStockObject(COLOR_WINDOW + 1);
-	} else if (uMsg == WM_PAINT && IsThemeActive()) {
+	}
+	else if (uMsg == WM_PAINT && IsThemeActive()) {
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hDlg, &ps);
 
 		// All painting occurs here, between BeginPaint and EndPaint.
-		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW+1));
+		FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
 
 		EndPaint(hDlg, &ps);
-		
+
 		return 0;
 	}
 
@@ -320,7 +324,7 @@ INT_PTR MainControlDialog::tabPageEventProc(HWND hDlg, UINT uMsg, WPARAM wParam,
 void MainControlDialog::fillData() {
 	SendMessage(comboBoxInputType, CB_SETCURSEL, vInputType, 0);
 	SendMessage(comboBoxTableCode, CB_SETCURSEL, vCodeTable, 0);
-	
+
 	SendMessage(checkCtrl, BM_SETCHECK, HAS_CONTROL(vSwitchKeyStatus) ? 1 : 0, 0);
 	SendMessage(checkAlt, BM_SETCHECK, HAS_OPTION(vSwitchKeyStatus) ? 1 : 0, 0);
 	SendMessage(checkWin, BM_SETCHECK, HAS_COMMAND(vSwitchKeyStatus) ? 1 : 0, 0);
@@ -330,7 +334,7 @@ void MainControlDialog::fillData() {
 
 	SendMessage(checkVietnamese, BM_SETCHECK, vLanguage, 0);
 	SendMessage(checkEnglish, BM_SETCHECK, !vLanguage, 0);
-	
+
 	SendMessage(checkModernOrthorgraphy, BM_SETCHECK, vUseModernOrthography ? 1 : 0, 0);
 	SendMessage(checkFixRecommendBrowser, BM_SETCHECK, vFixRecommendBrowser ? 1 : 0, 0);
 	SendMessage(checkShowOnStartup, BM_SETCHECK, vShowOnStartUp ? 1 : 0, 0);
@@ -344,7 +348,8 @@ void MainControlDialog::fillData() {
 	SendMessage(checkQuickEndConsonant, BM_SETCHECK, vQuickEndConsonant ? 1 : 0, 0);
 	SendMessage(checkRememberTableCode, BM_SETCHECK, vRememberCode ? 1 : 0, 0);
 	SendMessage(checkTempOffOpenKey, BM_SETCHECK, vTempOffOpenKey ? 1 : 0, 0);
-	
+	SendMessage(checkVietnameseOffByEsc, BM_SETCHECK, vVietnameseOffByEsc ? 1 : 0, 0);
+
 	SendMessage(checkSmartSwitchKey, BM_SETCHECK, vUseSmartSwitchKey ? 1 : 0, 0);
 	SendMessage(checkCapsFirstChar, BM_SETCHECK, vUpperCaseFirstChar ? 1 : 0, 0);
 	SendMessage(checkQuickTelex, BM_SETCHECK, vQuickTelex ? 1 : 0, 0);
@@ -378,10 +383,11 @@ void MainControlDialog::setSwitchKey(const unsigned short& code) {
 	APP_SET_DATA(vSwitchKeyStatus, vSwitchKeyStatus);
 }
 
-void MainControlDialog::onComboBoxSelected(const HWND & hCombobox, const int & comboboxId) {
+void MainControlDialog::onComboBoxSelected(const HWND& hCombobox, const int& comboboxId) {
 	if (hCombobox == comboBoxInputType) {
 		APP_SET_DATA(vInputType, (int)SendMessage(hCombobox, CB_GETCURSEL, 0, 0));
-	} else if (hCombobox == comboBoxTableCode) {
+	}
+	else if (hCombobox == comboBoxTableCode) {
 		APP_SET_DATA(vCodeTable, (int)SendMessage(hCombobox, CB_GETCURSEL, 0, 0));
 		if (vRememberCode) {
 			setAppInputMethodStatus(OpenKeyHelper::getFrontMostAppExecuteName(), vLanguage | (vCodeTable << 1));
@@ -391,137 +397,172 @@ void MainControlDialog::onComboBoxSelected(const HWND & hCombobox, const int & c
 	SystemTrayHelper::updateData();
 }
 
-void MainControlDialog::onCheckboxClicked(const HWND & hWnd) {
+void MainControlDialog::onCheckboxClicked(const HWND& hWnd) {
 	int val = 0;
 	if (hWnd == checkCtrl) {
 		val = (int)SendMessage(checkCtrl, BM_GETCHECK, 0, 0);
 		vSwitchKeyStatus &= (~0x100);
 		vSwitchKeyStatus |= val << 8;
 		APP_SET_DATA(vSwitchKeyStatus, vSwitchKeyStatus);
-	} else if (hWnd == checkAlt) {
+	}
+	else if (hWnd == checkAlt) {
 		val = (int)SendMessage(checkAlt, BM_GETCHECK, 0, 0);
 		vSwitchKeyStatus &= (~0x200);
 		vSwitchKeyStatus |= val << 9;
 		APP_SET_DATA(vSwitchKeyStatus, vSwitchKeyStatus);
-	} else if (hWnd == checkWin) {
+	}
+	else if (hWnd == checkWin) {
 		val = (int)SendMessage(checkWin, BM_GETCHECK, 0, 0);
 		vSwitchKeyStatus &= (~0x400);
 		vSwitchKeyStatus |= val << 10;
 		APP_SET_DATA(vSwitchKeyStatus, vSwitchKeyStatus);
-	} else if (hWnd == checkShift) {
+	}
+	else if (hWnd == checkShift) {
 		val = (int)SendMessage(checkShift, BM_GETCHECK, 0, 0);
 		vSwitchKeyStatus &= (~0x800);
 		vSwitchKeyStatus |= val << 11;
 		APP_SET_DATA(vSwitchKeyStatus, vSwitchKeyStatus);
-	} else if (hWnd == checkBeep) {
+	}
+	else if (hWnd == checkBeep) {
 		val = (int)SendMessage(checkBeep, BM_GETCHECK, 0, 0);
 		vSwitchKeyStatus &= (~0x8000);
 		vSwitchKeyStatus |= val << 15;
 		APP_SET_DATA(vSwitchKeyStatus, vSwitchKeyStatus);
-	} else if (hWnd == checkVietnamese) {
+	}
+	else if (hWnd == checkVietnamese) {
 		val = (int)SendMessage(checkVietnamese, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vLanguage, val ? 1 : 0);
 		if (vUseSmartSwitchKey) {
 			setAppInputMethodStatus(OpenKeyHelper::getFrontMostAppExecuteName(), vLanguage | (vCodeTable << 1));
 			saveSmartSwitchKeyData();
 		}
-	} else if (hWnd == checkEnglish) {
+	}
+	else if (hWnd == checkEnglish) {
 		val = (int)SendMessage(checkVietnamese, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vLanguage, val ? 1 : 0);
 		if (vUseSmartSwitchKey) {
 			setAppInputMethodStatus(OpenKeyHelper::getFrontMostAppExecuteName(), vLanguage | (vCodeTable << 1));
 			saveSmartSwitchKeyData();
 		}
-	} else if (hWnd == checkModernOrthorgraphy) {
+	}
+	else if (hWnd == checkModernOrthorgraphy) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vUseModernOrthography, val ? 1 : 0);
-	} else if (hWnd == checkFixRecommendBrowser) {
+	}
+	else if (hWnd == checkFixRecommendBrowser) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vFixRecommendBrowser, val ? 1 : 0);
 		EnableWindow(checkFixChromium, vFixRecommendBrowser);
-	} else if (hWnd == checkShowOnStartup) {
+	}
+	else if (hWnd == checkShowOnStartup) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vShowOnStartUp, val ? 1 : 0);
-	} else if (hWnd == checkRunWithWindows) {
+	}
+	else if (hWnd == checkRunWithWindows) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vRunWithWindows, val ? 1 : 0);
 		OpenKeyHelper::registerRunOnStartup(vRunWithWindows);
-	} else if (hWnd == checkSpelling) {
+	}
+	else if (hWnd == checkSpelling) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vCheckSpelling, val ? 1 : 0);
 		vSetCheckSpelling();
 		EnableWindow(checkRestoreIfWrongSpelling, vCheckSpelling);
 		EnableWindow(checkAllowZWJF, vCheckSpelling);
 		EnableWindow(checkTempOffSpelling, vCheckSpelling);
-	} else if (hWnd == checkRestoreIfWrongSpelling) {
+	}
+	else if (hWnd == checkRestoreIfWrongSpelling) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vRestoreIfWrongSpelling, val ? 1 : 0);
-	} else if (hWnd == checkUseClipboard) {
+	}
+	else if (hWnd == checkUseClipboard) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vSendKeyStepByStep, val ? 0 : 1);
-	} else if (hWnd == checkSmartSwitchKey) {
+	}
+	else if (hWnd == checkSmartSwitchKey) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vUseSmartSwitchKey, val ? 1 : 0);
-	} else if (hWnd == checkCapsFirstChar) {
+	}
+	else if (hWnd == checkCapsFirstChar) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vUpperCaseFirstChar, val ? 1 : 0);
-	} else if (hWnd == checkQuickTelex) {
+	}
+	else if (hWnd == checkQuickTelex) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vQuickTelex, val ? 1 : 0);
-	} else if (hWnd == checkUseMacro) {
+	}
+	else if (hWnd == checkUseMacro) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vUseMacro, val ? 1 : 0);
-	} else if (hWnd == checkUseMacroInEnglish) {
+	}
+	else if (hWnd == checkUseMacroInEnglish) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vUseMacroInEnglishMode, val ? 1 : 0);
-	} else if (hWnd == checkModernIcon) {
+	}
+	else if (hWnd == checkModernIcon) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vUseGrayIcon, val ? 1 : 0);
-	} else if (hWnd == checkAllowZWJF) {
+	}
+	else if (hWnd == checkAllowZWJF) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vAllowConsonantZFWJ, val ? 1 : 0);
-	} else if (hWnd == checkTempOffSpelling) {
+	}
+	else if (hWnd == checkTempOffSpelling) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vTempOffSpelling, val ? 1 : 0);
-	} else if (hWnd == checkQuickStartConsonant) {
+	}
+	else if (hWnd == checkQuickStartConsonant) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vQuickStartConsonant, val ? 1 : 0);
-	} else if (hWnd == checkQuickEndConsonant) {
+	}
+	else if (hWnd == checkQuickEndConsonant) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vQuickEndConsonant, val ? 1 : 0);
-	} else if (hWnd == checkSupportMetroApp) {
+	}
+	else if (hWnd == checkSupportMetroApp) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vSupportMetroApp, val ? 1 : 0);
-	} else if (hWnd == checkMacroAutoCaps) {
+	}
+	else if (hWnd == checkMacroAutoCaps) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vAutoCapsMacro, val ? 1 : 0);
-	} else if (hWnd == checkCreateDesktopShortcut) {
+	}
+	else if (hWnd == checkCreateDesktopShortcut) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vCreateDesktopShortcut, val ? 1 : 0);
 		//create desktop shortcut
 		if (val)
 			OpenKeyManager::createDesktopShortcut();
-	} else if (hWnd == checkRunAsAdmin) {
+	}
+	else if (hWnd == checkRunAsAdmin) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vRunAsAdmin, val ? 1 : 0);
 		requestRestartAsAdmin();
-	} else if (hWnd == checkCheckNewVersion) {
+	}
+	else if (hWnd == checkCheckNewVersion) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vCheckNewVersion, val ? 1 : 0);
-	} else if (hWnd == checkRememberTableCode) {
+	}
+	else if (hWnd == checkRememberTableCode) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vRememberCode, val ? 1 : 0);
-	} else if (hWnd == checkTempOffOpenKey) {
+	}
+	else if (hWnd == checkTempOffOpenKey) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vTempOffOpenKey, val ? 1 : 0);
-	} else if (hWnd == checkFixChromium) {
+	}
+	else if (hWnd == checkVietnameseOffByEsc) {
+		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
+		APP_SET_DATA(vVietnameseOffByEsc, val ? 1 : 0);
+	}
+	else if (hWnd == checkFixChromium) {
 		val = (int)SendMessage(hWnd, BM_GETCHECK, 0, 0);
 		APP_SET_DATA(vFixChromiumBrowser, val ? 1 : 0);
 	}
 	SystemTrayHelper::updateData();
 }
 
-void MainControlDialog::onCharacter(const HWND& hWnd, const UINT16 & keyCode) {
+void MainControlDialog::onCharacter(const HWND& hWnd, const UINT16& keyCode) {
 	if (keyCode == 0) return;
 	if (hWnd == textSwitchKey) {
 		UINT16 code = GET_SWITCH_KEY(vSwitchKeyStatus);
@@ -536,12 +577,14 @@ void MainControlDialog::onCharacter(const HWND& hWnd, const UINT16 & keyCode) {
 	}
 }
 
-void MainControlDialog::setSwitchKeyText(const HWND & hWnd, const UINT16 & keyCode) {
+void MainControlDialog::setSwitchKeyText(const HWND& hWnd, const UINT16& keyCode) {
 	if (keyCode == KEY_SPACE) {
 		SetWindowText(hWnd, _T("Space"));
-	} else if (keyCode == 0xFE) {
+	}
+	else if (keyCode == 0xFE) {
 		SetWindowText(hWnd, _T(""));
-	} else {
+	}
+	else {
 		Uint16 key[] = { keyCode, 0 };
 		SetWindowText(hWnd, (LPCWSTR)&key);
 	}
@@ -600,7 +643,8 @@ void MainControlDialog::requestRestartAsAdmin() {
 			PostQuitMessage(0);
 			ShellExecute(0, L"runas", OpenKeyHelper::getFullPath().c_str(), 0, 0, SW_SHOWNORMAL);
 		}
-	} else {
+	}
+	else {
 		OpenKeyHelper::registerRunOnStartup(vRunWithWindows);
 	}
 }
