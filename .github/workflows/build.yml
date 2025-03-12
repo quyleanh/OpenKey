@@ -32,10 +32,10 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       
     - name: Set up MSBuild
-      uses: microsoft/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.3.1
       
     - name: Build Solution
       run: |
@@ -44,7 +44,7 @@ jobs:
         MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform
         
     - name: Archive Build Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: OpenKey-Build
-        path: Sources/OpenKey/win32/OpenKey/x64/Release/
+        path: Sources/OpenKey/win32/OpenKey/${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}/${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}/
