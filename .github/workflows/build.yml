@@ -39,11 +39,12 @@ jobs:
       
     - name: Build Solution
       run: |
-        MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=Release /p:Platform=x64
+        $configuration = "${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}"
+        $platform = "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}"
+        MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform
         
     - name: Archive Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v2
       with:
         name: OpenKey-Build
         path: Sources/OpenKey/win32/OpenKey/x64/Release/
-
