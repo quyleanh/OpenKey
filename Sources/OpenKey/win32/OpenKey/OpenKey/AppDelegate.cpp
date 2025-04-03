@@ -40,6 +40,7 @@ int vQuickEndConsonant = 0;
 int vOtherLanguage = 1;
 int vRememberCode = 1;
 int vTempOffOpenKey = 0;
+int vVietnameseOffByEsc = 0;
 
 int vUseGrayIcon = 0;
 int vShowOnStartUp = 0;

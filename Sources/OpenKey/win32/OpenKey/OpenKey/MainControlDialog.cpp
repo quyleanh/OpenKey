@@ -147,7 +147,8 @@ void MainControlDialog::initDialog() {
     checkTempOffOpenKey = GetDlgItem(hTabPage1, IDC_CHECK_TEMP_OFF_OPEN_KEY);
     createToolTip(checkTempOffOpenKey, IDS_STRING_TEMP_OFF_OPENKEY);
 
-    /*------------end tab 1----------------*/
+    checkVietnameseOffByEsc = GetDlgItem(hTabPage1, IDC_CHECK_VIETNAMESE_OFF_BY_ESC);
+	/*------------end tab 1----------------*/
 
     checkQuickStartConsonant = GetDlgItem(hTabPage2, IDC_CHECK_QUICK_START_CONSONANT);
     createToolTip(checkQuickStartConsonant, IDS_STRING_START_CONSONANT);
@@ -351,6 +352,7 @@ void MainControlDialog::fillData() {
     SendMessage(checkRememberTableCode, BM_SETCHECK, vRememberCode ? 1 : 0, 0);
     SendMessage(checkAllowOtherLanguages, BM_SETCHECK, vOtherLanguage ? 1 : 0, 0);
     SendMessage(checkTempOffOpenKey, BM_SETCHECK, vTempOffOpenKey ? 1 : 0, 0);
+    SendMessage(checkVietnameseOffByEsc, BM_SETCHECK, vVietnameseOffByEsc ? 1 : 0, 0);
 
     SendMessage(checkSmartSwitchKey, BM_SETCHECK, vUseSmartSwitchKey ? 1 : 0, 0);
     SendMessage(checkCapsFirstChar, BM_SETCHECK, vUpperCaseFirstChar ? 1 : 0, 0);

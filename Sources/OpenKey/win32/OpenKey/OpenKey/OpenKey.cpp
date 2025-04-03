@@ -30,7 +30,7 @@ redistribute your new version, it MUST be open source.
 #define EMPTY_HOTKEY 0xFE0000FE
 
 static vector<string> _chromiumBrowser = {
-	"chrome.exe", "brave.exe", "msedge.exe"
+	"chrome.exe", "brave.exe", "msedge.exe", "firefox.exe"
 };
 
 extern int vSendKeyStepByStep;
@@ -109,6 +109,7 @@ void OpenKeyInit() {
 	APP_GET_DATA(vRememberCode, 1);
 	APP_GET_DATA(vOtherLanguage, 1);
 	APP_GET_DATA(vTempOffOpenKey, 0);
+	APP_GET_DATA(vVietnameseOffByEsc, 0);
 	APP_GET_DATA(vFixChromiumBrowser, 0);
 
 	//init convert tool
@@ -147,7 +148,7 @@ void OpenKeyInit() {
 	if (GetKeyState(VK_LSHIFT) < 0 || GetKeyState(VK_RSHIFT) < 0) _flag |= MASK_SHIFT;
 	if (GetKeyState(VK_LCONTROL) < 0 || GetKeyState(VK_RCONTROL) < 0) _flag |= MASK_CONTROL;
 	if (GetKeyState(VK_LMENU) < 0 || GetKeyState(VK_RMENU) < 0) _flag |= MASK_ALT;
-	if (GetKeyState(VK_LWIN) < 0 || GetKeyState(VK_RWIN) < 0) _flag |= MASK_WIN;
+	//if (GetKeyState(VK_LWIN) < 0 || GetKeyState(VK_RWIN) < 0) _flag |= MASK_WIN;
 	if (GetKeyState(VK_NUMLOCK) < 0) _flag |= MASK_NUMLOCK;
 	if (GetKeyState(VK_CAPITAL) == 1) _flag |= MASK_CAPITAL;
 	if (GetKeyState(VK_SCROLL) < 0) _flag |= MASK_SCROLL;
@@ -178,9 +179,9 @@ static void InsertKeyLength(const Uint8& len) {
 	_syncKey.push_back(len);
 }
 
-static inline void prepareKeyEvent(INPUT& input, const Uint16& keycode, const bool& isPress, const DWORD& flag=0) {
+static inline void prepareKeyEvent(INPUT& input, const Uint16& keycode, const bool& isPress, const DWORD& flag = 0) {
 	input.type = INPUT_KEYBOARD;
-	input.ki.dwFlags = isPress ? flag : flag|KEYEVENTF_KEYUP;
+	input.ki.dwFlags = isPress ? flag : flag | KEYEVENTF_KEYUP;
 	input.ki.wVk = keycode;
 	input.ki.wScan = 0;
 	input.ki.time = 0;
@@ -196,7 +197,7 @@ static inline void prepareUnicodeEvent(INPUT& input, const Uint16& unicode, cons
 	input.ki.dwExtraInfo = 1;
 }
 
-static void SendCombineKey(const Uint16& key1, const Uint16& key2, const DWORD& flagKey1=0, const DWORD& flagKey2 = 0) {
+static void SendCombineKey(const Uint16& key1, const Uint16& key2, const DWORD& flagKey1 = 0, const DWORD& flagKey2 = 0) {
 	prepareKeyEvent(keyEvent[0], key1, true, flagKey1);
 	SendInput(1, keyEvent, sizeof(INPUT));
 
@@ -220,17 +221,20 @@ static void SendKeyCode(Uint32 data) {
 			prepareKeyEvent(keyEvent[0], _newChar, true);
 			prepareKeyEvent(keyEvent[1], _newChar, false);
 			SendInput(2, keyEvent, sizeof(INPUT));
-		} else {
+		}
+		else {
 			prepareUnicodeEvent(keyEvent[0], _newChar, true);
 			prepareUnicodeEvent(keyEvent[1], _newChar, false);
 			SendInput(2, keyEvent, sizeof(INPUT));
 		}
-	} else {
+	}
+	else {
 		if (vCodeTable == 0) { //unicode 2 bytes code
 			prepareUnicodeEvent(keyEvent[0], _newChar, true);
 			prepareUnicodeEvent(keyEvent[1], _newChar, false);
 			SendInput(2, keyEvent, sizeof(INPUT));
-		} else if (vCodeTable == 1 || vCodeTable == 2 || vCodeTable == 4) { //others such as VNI Windows, TCVN3: 1 byte code
+		}
+		else if (vCodeTable == 1 || vCodeTable == 2 || vCodeTable == 4) { //others such as VNI Windows, TCVN3: 1 byte code
 			_newCharHi = HIBYTE(_newChar);
 			_newChar = LOBYTE(_newChar);
 
@@ -244,11 +248,13 @@ static void SendKeyCode(Uint32 data) {
 				prepareUnicodeEvent(keyEvent[0], _newCharHi, true);
 				prepareUnicodeEvent(keyEvent[1], _newCharHi, false);
 				SendInput(2, keyEvent, sizeof(INPUT));
-			} else {
+			}
+			else {
 				if (vCodeTable == 2) //VNI
 					InsertKeyLength(1);
 			}
-		} else if (vCodeTable == 3) { //Unicode Compound
+		}
+		else if (vCodeTable == 3) { //Unicode Compound
 			_newCharHi = (_newChar >> 13);
 			_newChar &= 0x1FFF;
 			_uniChar[0] = _newChar;
@@ -305,7 +311,7 @@ static void SendNewCharString(const bool& dataFromMacro = false) {
 		_newCharString.resize(_newCharSize);
 	}
 	_willSendControlKey = false;
-	
+
 	if (_newCharSize > 0) {
 		for (_k = dataFromMacro ? 0 : pData->newCharCount - 1;
 			dataFromMacro ? _k < pData->macroData.size() : _k >= 0;
@@ -317,15 +323,18 @@ static void SendNewCharString(const bool& dataFromMacro = false) {
 				if (IS_DOUBLE_CODE(vCodeTable)) {
 					InsertKeyLength(1);
 				}
-			} else if (!(_tempChar & CHAR_CODE_MASK)) {
+			}
+			else if (!(_tempChar & CHAR_CODE_MASK)) {
 				if (IS_DOUBLE_CODE(vCodeTable)) //VNI
 					InsertKeyLength(1);
 				_newCharString[_j++] = keyCodeToCharacter(_tempChar);
-			} else {
+			}
+			else {
 				_newChar = _tempChar;
 				if (vCodeTable == 0) {  //unicode 2 bytes code
 					_newCharString[_j++] = _newChar;
-				} else if (vCodeTable == 1 || vCodeTable == 2 || vCodeTable == 4) { //others such as VNI Windows, TCVN3: 1 byte code
+				}
+				else if (vCodeTable == 1 || vCodeTable == 2 || vCodeTable == 4) { //others such as VNI Windows, TCVN3: 1 byte code
 					_newCharHi = HIBYTE(_newChar);
 					_newChar = LOBYTE(_newChar);
 					_newCharString[_j++] = _newChar;
@@ -340,7 +349,8 @@ static void SendNewCharString(const bool& dataFromMacro = false) {
 						if (vCodeTable == 2) //VNI
 							InsertKeyLength(1);
 					}
-				} else if (vCodeTable == 3) { //Unicode Compound
+				}
+				else if (vCodeTable == 3) { //Unicode Compound
 					_newCharHi = (_newChar >> 13);
 					_newChar &= 0x1FFF;
 
@@ -360,7 +370,8 @@ static void SendNewCharString(const bool& dataFromMacro = false) {
 		if (keyCodeToCharacter(_keycode) != 0) {
 			_newCharSize++;
 			_newCharString[_j++] = keyCodeToCharacter(_keycode | ((_flag & MASK_SHIFT) || (_flag & MASK_CAPITAL) ? CAPS_MASK : 0));
-		} else {
+		}
+		else {
 			_willSendControlKey = true;
 		}
 	}
@@ -372,7 +383,7 @@ static void SendNewCharString(const bool& dataFromMacro = false) {
 
 	//Send shift + insert
 	SendCombineKey(KEY_LEFT_SHIFT, VK_INSERT, 0, KEYEVENTF_EXTENDEDKEY);
-	
+
 	//the case when hCode is vRestore or vRestoreAndStartNewSession,
 	//the word is invalid and last key is control key such as TAB, LEFT ARROW, RIGHT ARROW,...
 	if (_willSendControlKey) {
@@ -387,8 +398,8 @@ bool checkHotKey(int hotKeyData, bool checkKeyCode = true) {
 		return false;
 	if (HAS_OPTION(hotKeyData) ^ GET_BOOL(_lastFlag & MASK_ALT))
 		return false;
-	if (HAS_COMMAND(hotKeyData) ^ GET_BOOL(_lastFlag & MASK_WIN))
-		return false;
+	//if (HAS_COMMAND(hotKeyData) ^ GET_BOOL(_lastFlag & MASK_WIN))
+	//	return false;
 	if (HAS_SHIFT(hotKeyData) ^ GET_BOOL(_lastFlag & MASK_SHIFT))
 		return false;
 	if (checkKeyCode) {
@@ -398,11 +409,17 @@ bool checkHotKey(int hotKeyData, bool checkKeyCode = true) {
 	return true;
 }
 
-void switchLanguage() {
-	if (vLanguage == 0)
-		vLanguage = 1;
-	else
-		vLanguage = 0;
+void switchLanguage(int value = -1) {
+	if (value == -1) {
+		if (vLanguage == 0)
+			vLanguage = 1;
+		else
+			vLanguage = 0;
+	}
+	else {
+		vLanguage = value;
+	}
+
 	if (HAS_BEEP(vSwitchKeyStatus))
 		MessageBeep(MB_OK);
 	AppDelegate::getInstance()->onInputMethodChangedFromHotKey();
@@ -442,11 +459,13 @@ static void handleMacro() {
 	//send real data
 	if (!vSendKeyStepByStep) {
 		SendNewCharString(true);
-	} else {
+	}
+	else {
 		for (int i = 0; i < pData->macroData.size(); i++) {
 			if (pData->macroData[i] & PURE_CHARACTER_MASK) {
 				SendPureCharacter(pData->macroData[i]);
-			} else {
+			}
+			else {
 				SendKeyCode(pData->macroData[i]);
 			}
 		}
@@ -455,20 +474,16 @@ static void handleMacro() {
 }
 
 static bool SetModifierMask(const Uint16& vkCode) {
-	// For caps lock case, toggling the flag isn't enough. We need to check the actual state, which should be done before each key press.
-	// Example: the caps lock state can be changed without the key being pressed, or the key toggle is made with admin privilege, making the app not able to detect the change.
-	if (GetKeyState(VK_CAPITAL) == 1) _flag |= MASK_CAPITAL;
-	else _flag &= ~MASK_CAPITAL;
-
 	if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT) _flag |= MASK_SHIFT;
 	else if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL) _flag |= MASK_CONTROL;
 	else if (vkCode == VK_LMENU || vkCode == VK_RMENU) _flag |= MASK_ALT;
-	else if (vkCode == VK_LWIN || vkCode == VK_RWIN) _flag |= MASK_WIN;
+	//else if (vkCode == VK_LWIN || vkCode == VK_RWIN) _flag |= MASK_WIN;
 	else if (vkCode == VK_NUMLOCK) _flag |= MASK_NUMLOCK;
+	else if (vkCode == VK_CAPITAL) _flag ^= MASK_CAPITAL;
 	else if (vkCode == VK_SCROLL) _flag |= MASK_SCROLL;
-	else { 
+	else {
 		_isFlagKey = false;
-		return false; 
+		return false;
 	}
 	_isFlagKey = true;
 	return true;
@@ -478,24 +493,24 @@ static bool UnsetModifierMask(const Uint16& vkCode) {
 	if (vkCode == VK_LSHIFT || vkCode == VK_RSHIFT) _flag &= ~MASK_SHIFT;
 	else if (vkCode == VK_LCONTROL || vkCode == VK_RCONTROL) _flag &= ~MASK_CONTROL;
 	else if (vkCode == VK_LMENU || vkCode == VK_RMENU) _flag &= ~MASK_ALT;
-	else if (vkCode == VK_LWIN || vkCode == VK_RWIN) _flag &= ~MASK_WIN;
+	//else if (vkCode == VK_LWIN || vkCode == VK_RWIN) _flag &= ~MASK_WIN;
 	else if (vkCode == VK_NUMLOCK) _flag &= ~MASK_NUMLOCK;
 	else if (vkCode == VK_SCROLL) _flag &= ~MASK_SCROLL;
-	else { 
+	else {
 		_isFlagKey = false;
-		return false; 
+		return false;
 	}
 	_isFlagKey = true;
 	return true;
 }
 
 LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
-	keyboardData = (KBDLLHOOKSTRUCT *)lParam;
+	keyboardData = (KBDLLHOOKSTRUCT*)lParam;
 	//ignore my event
 	if (keyboardData->dwExtraInfo != 0) {
 		return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
 	}
-	
+
 	//ignore if IME pad is open when typing Japanese/Chinese...
 	HWND hWnd = GetForegroundWindow();
 	HWND hIME = ImmGetDefaultIMEWnd(hWnd);
@@ -503,12 +518,13 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (isImeON) {
 		return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
 	}
-	
+
 	//check modifier key
 	if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
 		//LOG(L"Key down: %d\n", keyboardData->vkCode);
 		SetModifierMask((Uint16)keyboardData->vkCode);
-	} else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+	}
+	else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
 		//LOG(L"Key up: %d\n", keyboardData->vkCode);
 		UnsetModifierMask((Uint16)keyboardData->vkCode);
 	}
@@ -517,9 +533,14 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 
 	//switch language shortcut; convert hotkey
 	if ((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && !_isFlagKey && _keycode != 0) {
-		if (GET_SWITCH_KEY(vSwitchKeyStatus) != _keycode && GET_SWITCH_KEY(convertToolHotKey) != _keycode) {
+		if (GET_SWITCH_KEY(vSwitchKeyStatus) != _keycode && GET_SWITCH_KEY(convertToolHotKey) != _keycode && _keycode != VK_ESCAPE) {
 			_lastFlag = 0;
-		} else {
+		}
+		else {
+			if (vVietnameseOffByEsc && _keycode == VK_ESCAPE) {
+				switchLanguage(0);
+			}
+
 			if (GET_SWITCH_KEY(vSwitchKeyStatus) == _keycode && checkHotKey(vSwitchKeyStatus, GET_SWITCH_KEY(vSwitchKeyStatus) != 0xFE)) {
 				switchLanguage();
 				_hasJustUsedHotKey = true;
@@ -534,7 +555,8 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 			}
 		}
 		_hasJustUsedHotKey = _lastFlag != 0;
-	} else if (_isFlagKey) {
+	}
+	else if (_isFlagKey) {
 		if (_lastFlag == 0 || _lastFlag < _flag)
 			_lastFlag = _flag;
 		else if (_lastFlag > _flag) {
@@ -581,15 +603,16 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 	if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
 		//send event signal to Engine
 		vKeyHandleEvent(vKeyEvent::Keyboard,
-						vKeyEventState::KeyDown,
-						_keycode,
-						(_flag & MASK_SHIFT && _flag & MASK_CAPITAL) ? 0 : (_flag & MASK_SHIFT ? 1 : (_flag & MASK_CAPITAL ? 2 : 0)),
-						OTHER_CONTROL_KEY);
+			vKeyEventState::KeyDown,
+			_keycode,
+			(_flag & MASK_SHIFT && _flag & MASK_CAPITAL) ? 0 : (_flag & MASK_SHIFT ? 1 : (_flag & MASK_CAPITAL ? 2 : 0)),
+			OTHER_CONTROL_KEY);
 		if (pData->code == vDoNothing) { //do nothing
 			if (IS_DOUBLE_CODE(vCodeTable)) { //VNI
 				if (pData->extCode == 1) { //break key
 					_syncKey.clear();
-				} else if (pData->extCode == 2) { //delete key
+				}
+				else if (pData->extCode == 2) { //delete key
 					if (_syncKey.size() > 0) {
 						if (_syncKey.back() > 1 && (vCodeTable == 2 || vCodeTable == 3)) {
 							//send one more backspace
@@ -597,25 +620,28 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 						}
 						_syncKey.pop_back();
 					}
-				} else if (pData->extCode == 3) { //normal key
+				}
+				else if (pData->extCode == 3) { //normal key
 					InsertKeyLength(1);
 				}
 			}
 			return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
-		} else if (pData->code == vWillProcess || pData->code == vRestore || pData->code == vRestoreAndStartNewSession) { //handle result signal
+		}
+		else if (pData->code == vWillProcess || pData->code == vRestore || pData->code == vRestoreAndStartNewSession) { //handle result signal
 			//fix autocomplete
 			if (vFixRecommendBrowser && pData->extCode != 4) {
-				if (vFixChromiumBrowser && 
+				if (vFixChromiumBrowser &&
 					std::find(_chromiumBrowser.begin(), _chromiumBrowser.end(), OpenKeyHelper::getLastAppExecuteName()) != _chromiumBrowser.end()) {
 					SendCombineKey(KEY_LEFT_SHIFT, KEY_LEFT, 0, KEYEVENTF_EXTENDEDKEY);
 					if (pData->backspaceCount == 1)
 						pData->backspaceCount--;
-				} else {
+				}
+				else {
 					SendEmptyCharacter();
 					pData->backspaceCount++;
 				}
 			}
-			
+
 			//send backspace
 			if (pData->backspaceCount > 0 && pData->backspaceCount < MAX_BUFF) {
 				for (_i = 0; _i < pData->backspaceCount; _i++) {
@@ -626,7 +652,8 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 			//send new character
 			if (!vSendKeyStepByStep) {
 				SendNewCharString();
-			} else {
+			}
+			else {
 				if (pData->newCharCount > 0 && pData->newCharCount <= MAX_BUFF) {
 					for (int i = pData->newCharCount - 1; i >= 0; i--) {
 						SendKeyCode(pData->charData[i]);
@@ -639,7 +666,8 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 					startNewSession();
 				}
 			}
-		} else if (pData->code == vReplaceMaro) { //MACRO
+		}
+		else if (pData->code == vReplaceMaro) { //MACRO
 			handleMacro();
 		}
 		return -1; //consume event
@@ -648,10 +676,10 @@ LRESULT CALLBACK keyboardHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
 }
 
 LRESULT CALLBACK mouseHookProcess(int nCode, WPARAM wParam, LPARAM lParam) {
-	mouseData = (MSLLHOOKSTRUCT *)lParam;
+	mouseData = (MSLLHOOKSTRUCT*)lParam;
 	switch (wParam) {
 	case WM_LBUTTONDOWN:
-	
+
 	case WM_RBUTTONDOWN:
 	case WM_MBUTTONDOWN:
 	case WM_XBUTTONDOWN:
@@ -683,7 +711,8 @@ VOID CALLBACK winEventProcCallback(HWINEVENTHOOK hWinEventHook, DWORD dwEvent, H
 			if (_languageTemp != -1) {
 				vLanguage = _languageTemp;
 				AppDelegate::getInstance()->onInputMethodChangedFromHotKey();
-			} else {
+			}
+			else {
 				saveSmartSwitchKeyData();
 			}
 		}
@@ -691,7 +720,8 @@ VOID CALLBACK winEventProcCallback(HWINEVENTHOOK hWinEventHook, DWORD dwEvent, H
 		if (vRememberCode && (_languageTemp >> 1) != vCodeTable) { //for remember table code feature
 			if (_languageTemp != -1) {
 				AppDelegate::getInstance()->onTableCode(_languageTemp >> 1);
-			} else {
+			}
+			else {
 				saveSmartSwitchKeyData();
 			}
 		}

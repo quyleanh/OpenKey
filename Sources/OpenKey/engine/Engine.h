@@ -243,3 +243,10 @@ wstring utf8ToWideString(const string& str);
 string wideStringToUtf8(const wstring& str);
 
 #endif /* Engine_h */
+
+//VIM
+/**
+ * 0: No; 1: Yes
+ * Turn off Vietnamese by Esc
+ */
+extern int vVietnameseOffByEsc;

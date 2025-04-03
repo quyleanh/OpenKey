@@ -1,0 +1,50 @@
+name: Build OpenKey
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      configuration:
+        description: 'Build Configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      platform:
+        description: 'Build Platform'
+        required: true
+        default: 'x86'
+        type: choice
+        options:
+          - x86
+          - x64
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1.3.1
+      
+    - name: Build Solution
+      run: |
+        $configuration = "${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}"
+        $platform = "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}"
+        MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform
+        
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: OpenKey-Build
+        path: Sources/OpenKey/win32/OpenKey/${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}/${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}/

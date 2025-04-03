@@ -26,7 +26,7 @@ private:
 		checkAllowZWJF, checkTempOffSpelling, checkQuickStartConsonant, checkQuickEndConsonant;
 	HWND checkSmartSwitchKey, checkCapsFirstChar, checkQuickTelex, checkUseMacro, checkUseMacroInEnglish;
 	HWND checkCreateDesktopShortcut, checkCheckNewVersion, checkRunAsAdmin, checkSupportMetroApp, checkMacroAutoCaps;
-	HWND checkFixChromium, checkRememberTableCode, checkTempOffOpenKey, checkAllowOtherLanguages;
+	HWND checkFixChromium, checkRememberTableCode, checkTempOffOpenKey, checkVietnameseOffByEsc, checkAllowOtherLanguages;
 	HWND hUpdateButton;
 private:
 	void initDialog();
