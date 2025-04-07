@@ -40,7 +40,7 @@ jobs:
       with:
         name: OpenKey
         path: |
-          ${{env.SOLUTION_FILE_PATH}}/Release/x32
+          ${{env.SOLUTION_FILE_PATH}}/Release/x86
           ${{env.SOLUTION_FILE_PATH}}/Release/x64
 
     outputs:
