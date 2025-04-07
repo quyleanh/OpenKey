@@ -41,7 +41,8 @@ jobs:
       run: |
         $configuration = "${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}"
         $platform = "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}"
-        MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform
+        $outputPath= "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}"
+        MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform /p:OutputPath=$outputPath
         
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v4
