@@ -1,12 +1,12 @@
 name: Build OpenKey
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - master
   workflow_dispatch:
     inputs:
       configuration:
@@ -41,7 +41,7 @@ jobs:
       run: |
         $configuration = "${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}"
         $platform = "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}"
-        $outputPath= "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}"
+        $outputPath= "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x64' }}/Release"
         MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform /p:OutputPath=$outputPath
         
     - name: Archive Build Artifacts
