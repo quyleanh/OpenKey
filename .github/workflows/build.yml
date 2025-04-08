@@ -54,7 +54,7 @@ jobs:
         $platform = "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}"
         
         # Create the target directory
-        New-Item -Path "ArtifactOutput/$platform/$configuration" -ItemType Directory -Force
+        New-Item -Path "ArtifactOutput/$configuration/$platform" -ItemType Directory -Force
         
         # Copy the OpenKey exe
         Copy-Item -Path "Sources/OpenKey/win32/OpenKey/OpenKey/$configuration/$platform/*.exe" -Destination "ArtifactOutput/$configuration/$platform/" -Force
