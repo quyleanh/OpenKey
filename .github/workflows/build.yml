@@ -52,4 +52,6 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: OpenKey-Build
-        path: ./${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}/${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}/
+        path: |
+          Sources/OpenKey/win32/OpenKey/OpenKey/$platform/$configuration/*.exe
+          Sources/OpenKey/win32/OpenKey/OpenKeyUpdate/$platform/$configuration/*.exe
