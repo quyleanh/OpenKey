@@ -191,13 +191,13 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,12,126,10
     CONTROL         "Sửa lỗi gợi ý (trình duyệt, Excel)",IDC_CHECK_FIX_RECOMMEND_BROWSER,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,31,128,10
-    CONTROL         "Kiểm tra chính tả",IDC_CHECK_SPELLING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,12,104,10
+    CONTROL         "Kiểm tra chính tả",IDC_CHECK_SPELLING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,141,12,104,10
     CONTROL         "Tự khôi phục phím với từ sai",IDC_CHECK_RESTORE_IF_WRONG_SPELLING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,31,122,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,141,31,122,10
     CONTROL         "Cho phép ""z w j f"" làm phụ âm đầu",IDC_CHECK_ALLOW_ZJWF,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,50,125,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,141,50,125,10
     CONTROL         "Tạm tắt chính tả bằng phím Ctrl",IDC_CHECK_TEMP_OFF_SPELLING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,69,123,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,141,69,123,10
     CONTROL         "Loại trừ ứng dụng thông minh",IDC_CHECK_SMART_SWITCH_KEY,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,69,111,10
     CONTROL         "Viết Hoa chữ cái đầu câu",IDC_CHECK_CAPS_FIRST_CHAR,
@@ -205,9 +205,9 @@ BEGIN
     CONTROL         "Tự ghi nhớ bảng mã theo ứng dụng",IDC_CHECK_SMART_SWITCH_CODE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,88,130,10
     CONTROL         "Cho phép gõ trong các ngôn ngữ khác",IDC_CHECK_OTHER_LANGUAGES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,105,161,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,141,105,161,10
     CONTROL         "Tạm tắt OpenKey bằng phím Alt",IDC_CHECK_TEMP_OFF_OPEN_KEY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,88,123,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,141,88,123,10
     CONTROL         "Tắt gõ tiếng Việt bằng phím Esc",IDC_CHECK_VIETNAMESE_OFF_BY_ESC,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,105,116,10
 END
