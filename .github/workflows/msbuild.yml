@@ -6,23 +6,23 @@ on:
   # pull_request:
   #   branches: [ "master" ]
   workflow_dispatch:
-  inputs:
-    configuration:
-      description: 'Build Configuration'
-      required: true
-      default: 'Release'
-      type: choice
-      options:
-        - Release
-        - Debug
-    platform:
-      description: 'Build Platform'
-      required: true
-      default: 'x86'
-      type: choice
-      options:
-        - x86
-        - x64
+    inputs:
+      configuration:
+        description: 'Build Configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+      platform:
+        description: 'Build Platform'
+        required: true
+        default: 'x86'
+        type: choice
+        options:
+          - x86
+          - x64
 
 env:
   # Path to the solution file relative to the root of the project.
