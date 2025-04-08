@@ -43,6 +43,10 @@ jobs:
         $platform = "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}"
         $outputPath= "${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}/Release"
         MSBuild.exe "Sources/OpenKey/win32/OpenKey/OpenKey.sln" /p:Configuration=$configuration /p:Platform=$platform /p:OutDir="Sources/OpenKey/win32/OpenKey/$platform/$configuration/" /p:IntDir="Sources/OpenKey/win32/OpenKey/$platform/$configuration/"
+        Write-Host "Checking directory structure in OpenKey folder:"
+        Get-ChildItem -Path "Sources/OpenKey/win32/OpenKey" -Recurse -Directory | Select-Object FullName
+        Write-Host "Looking for built files:"
+        Get-ChildItem -Path "Sources/OpenKey/win32/OpenKey" -Recurse -File -Include *.exe, *.dll | Select-Object FullName
         
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v4

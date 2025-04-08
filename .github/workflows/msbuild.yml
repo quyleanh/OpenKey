@@ -1,6 +1,7 @@
 name: MSBuild
 
 on:
+  disabled-event:
   # push:
   #   branches: [ "master" ]
   # pull_request:
