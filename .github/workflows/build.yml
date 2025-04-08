@@ -1,12 +1,12 @@
 name: Build OpenKey
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - master
   workflow_dispatch:
     inputs:
       configuration:
@@ -70,11 +70,3 @@ jobs:
       with:
         name: OpenKey-Build
         path: ArtifactOutput/${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}/${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}/
-        
-    # - name: Archive Build Artifacts
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: OpenKey-Build
-    #     path: |
-    #       Sources/OpenKey/win32/OpenKey/OpenKey/${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}/${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}/*.exe
-    #       Sources/OpenKey/win32/OpenKey/OpenKeyUpdate/${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'x86' }}/${{ github.event_name == 'workflow_dispatch' && inputs.configuration || 'Release' }}/*.exe
