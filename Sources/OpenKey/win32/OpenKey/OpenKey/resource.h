@@ -63,6 +63,7 @@
 #define IDD_DIALOG_OLD                  148
 #define IDD_DIALOG_TAB_INFO             149
 #define IDS_STRING_OTHER_LANGUAGES		150
+#define IDS_STRING_VIETNAMESE_OFF_BY_ESC 151
 #define IDC_COMBO1                      1000
 #define IDC_COMBO_INPUT_TYPE            1000
 #define IDC_CHECK1                      1001
