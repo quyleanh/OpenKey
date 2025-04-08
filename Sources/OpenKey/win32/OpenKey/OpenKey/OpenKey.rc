@@ -205,7 +205,7 @@ BEGIN
     CONTROL         "Tự ghi nhớ bảng mã theo ứng dụng",IDC_CHECK_SMART_SWITCH_CODE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,88,130,10
     CONTROL         "Cho phép gõ trong các ngôn ngữ khác",IDC_CHECK_OTHER_LANGUAGES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,105,131,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,105,161,10
     CONTROL         "Tạm tắt OpenKey bằng phím Alt",IDC_CHECK_TEMP_OFF_OPEN_KEY,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,88,123,10
     CONTROL         "Tắt gõ tiếng Việt bằng phím Esc",IDC_CHECK_VIETNAMESE_OFF_BY_ESC,
@@ -493,6 +493,12 @@ STRINGTABLE
 BEGIN
     IDS_STRING_OTHER_LANGUAGES 
                             "Cho phép gõ tiếng Việt với các ngôn ngữ ngoài tiếng Anh"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_STRING_VIETNAMESE_OFF_BY_ESC 
+                            "Tắt gõ tiếng Việt bằng nút Esc cho người dùng Vim"
 END
 
 STRINGTABLE

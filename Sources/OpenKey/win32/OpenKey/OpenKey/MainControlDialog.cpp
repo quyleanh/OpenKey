@@ -148,6 +148,7 @@ void MainControlDialog::initDialog() {
     createToolTip(checkTempOffOpenKey, IDS_STRING_TEMP_OFF_OPENKEY);
 
     checkVietnameseOffByEsc = GetDlgItem(hTabPage1, IDC_CHECK_VIETNAMESE_OFF_BY_ESC);
+    createToolTip(checkVietnameseOffByEsc, IDS_STRING_VIETNAMESE_OFF_BY_ESC);
 	/*------------end tab 1----------------*/
 
     checkQuickStartConsonant = GetDlgItem(hTabPage2, IDC_CHECK_QUICK_START_CONSONANT);
