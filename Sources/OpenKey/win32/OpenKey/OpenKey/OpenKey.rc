@@ -205,11 +205,11 @@ BEGIN
     CONTROL         "Tự ghi nhớ bảng mã theo ứng dụng",IDC_CHECK_SMART_SWITCH_CODE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,88,130,10
     CONTROL         "Cho phép gõ trong các ngôn ngữ khác",IDC_CHECK_OTHER_LANGUAGES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,106,204,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,105,131,10
     CONTROL         "Tạm tắt OpenKey bằng phím Alt",IDC_CHECK_TEMP_OFF_OPEN_KEY,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,88,123,10
     CONTROL         "Tắt gõ tiếng Việt bằng phím Esc",IDC_CHECK_VIETNAMESE_OFF_BY_ESC,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,151,106,116,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,105,116,10
 END
 
 IDD_DIALOG_TAB_MACRO DIALOGEX 0, 0, 299, 177
