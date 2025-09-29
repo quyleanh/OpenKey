@@ -79,13 +79,17 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        $prerelease = if ("${{ inputs.prerelease }}" -eq "true") { "--prerelease" } else { "" }
-        gh release create "${{ inputs.tag_name }}" `
-          --title "${{ inputs.release_name }}" `
-          --notes "${{ inputs.release_notes }}" `
-          $prerelease `
-          "OpenKey-x86.zip" `
+        $args = @(
+          "release", "create", "${{ inputs.tag_name }}",
+          "--title", "${{ inputs.release_name }}",
+          "--notes", "${{ inputs.release_notes }}",
+          "OpenKey-x86.zip",
           "OpenKey-x64.zip"
+        )
+        if ("${{ inputs.prerelease }}" -eq "true") {
+          $args += "--prerelease"
+        }
+        & gh @args
 
     - name: Generate artifact attestation for x86
       uses: actions/attest-build-provenance@v2
