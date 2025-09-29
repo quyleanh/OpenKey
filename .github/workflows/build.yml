@@ -76,36 +76,16 @@ jobs:
         Get-ChildItem -Path "*.zip"
 
     - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ inputs.tag_name }}
-        release_name: ${{ inputs.release_name }}
-        body: ${{ inputs.release_notes }}
-        draft: false
-        prerelease: ${{ inputs.prerelease }}
-
-    - name: Upload x86 Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./OpenKey-x86.zip
-        asset_name: OpenKey-x86.zip
-        asset_content_type: application/zip
-
-    - name: Upload x64 Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./OpenKey-x64.zip
-        asset_name: OpenKey-x64.zip
-        asset_content_type: application/zip
+      run: |
+        $prerelease = if ("${{ inputs.prerelease }}" -eq "true") { "--prerelease" } else { "" }
+        gh release create "${{ inputs.tag_name }}" `
+          --title "${{ inputs.release_name }}" `
+          --notes "${{ inputs.release_notes }}" `
+          $prerelease `
+          "OpenKey-x86.zip" `
+          "OpenKey-x64.zip"
 
     - name: Generate artifact attestation for x86
       uses: actions/attest-build-provenance@v2
